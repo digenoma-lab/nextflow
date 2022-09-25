@@ -11,6 +11,30 @@
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?colorB=26af64&style=popout)](http://bioconda.github.io/recipes/nextflow/README.html)
 [![Nextflow license](https://img.shields.io/github/license/nextflow-io/nextflow.svg?colorB=26af64&style=popout)](https://github.com/nextflow-io/nextflow/blob/master/COPYING)
 
+
+
+
+# Compilation Leftraru
+
+
+```
+ml purge
+ml Java/17.0.2
+make compile
+make pack
+make install
+# copy netflow to bin 
+cp build/releases/nextflow-22.09.5-edge-all ~/bin/nextflow
+```
+
+## Using singularity leftraru
+
+```
+ml purge
+ml intel/2022.00
+ml singularityCE
+```
+
 Quick overview
 ==============
 Nextflow is a bioinformatics workflow manager that enables the development of portable and reproducible workflows.

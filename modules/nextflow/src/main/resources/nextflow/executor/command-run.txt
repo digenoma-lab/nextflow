@@ -108,12 +108,14 @@ on_term() {
 }
 
 nxf_launch() {
+    mkdir -p /tmp/singularityce/singularity/mnt/session
     {{launch_cmd}}
 }
 
 nxf_stage() {
     true
     {{stage_inputs}}
+    mkdir -p /tmp/singularityce/singularity/mnt/session
 }
 
 nxf_unstage() {
