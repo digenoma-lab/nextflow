@@ -18,6 +18,8 @@
 
 
 ```
+git clone https://github.com/digenoma-lab/nextflow.git
+cd nextflow
 ml purge
 ml Java/17.0.2
 make compile
