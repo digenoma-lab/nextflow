@@ -28,6 +28,7 @@ import nextflow.container.ContainerBuilder
 import nextflow.container.DockerBuilder
 import nextflow.container.SingularityBuilder
 import nextflow.exception.ProcessException
+import nextflow.file.FileHelper
 import nextflow.processor.TaskBean
 import nextflow.processor.TaskProcessor
 import nextflow.processor.TaskRun
@@ -140,7 +141,7 @@ class BashWrapperBuilder {
     }
 
     protected boolean fixOwnership() {
-        systemOsName == 'Linux' && containerConfig?.fixOwnership && runWithContainer && containerConfig.engine == 'docker' // <-- note: only for docker (shifter is not affected)
+        systemOsName == 'Linux' && containerConfig?.fixOwnership && runWithContainer && containerConfig.engine == 'docker' // <-- note: only for docker (other container runtimes are not affected)
     }
 
     protected isMacOS() {
@@ -562,7 +563,7 @@ class BashWrapperBuilder {
         // The current work directory should be mounted only when
         // the task is executed in a temporary scratch directory (ie changeDir != null)
         // See https://github.com/nextflow-io/nextflow/issues/1710
-        builder.addMountWorkDir( changeDir as boolean )
+        builder.addMountWorkDir( changeDir as boolean || FileHelper.getWorkDirIsSymlink() )
 
         builder.build()
         return builder

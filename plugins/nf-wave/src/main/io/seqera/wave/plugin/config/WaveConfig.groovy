@@ -28,7 +28,7 @@ import nextflow.util.Duration
 @Slf4j
 @CompileStatic
 class WaveConfig {
-    final private static String DEF_ENDPOINT = 'http://localhost:9090'
+    final private static String DEF_ENDPOINT = 'https://wave.seqera.io'
     final private Boolean enabled
     final private String endpoint
     final private List<URL> containerConfigUrl
@@ -38,6 +38,7 @@ class WaveConfig {
     final private Boolean bundleProjectResources
     final private String buildRepository
     final private String cacheRepository
+    final private String containerPlatform
 
     WaveConfig(Map opts, Map<String,String> env=System.getenv()) {
         this.enabled = opts.enabled
@@ -49,6 +50,7 @@ class WaveConfig {
         this.cacheRepository = opts.navigate('build.cacheRepository') as String
         this.strategy = parseStrategy(opts.strategy)
         this.bundleProjectResources = opts.bundleProjectResources
+        this.containerPlatform = opts.containerPlatform
         if( !endpoint.startsWith('http://') && !endpoint.startsWith('https://') )
             throw new IllegalArgumentException("Endpoint URL should start with 'http:' or 'https:' protocol prefix - offending value: $endpoint")
     }
@@ -111,11 +113,14 @@ class WaveConfig {
     }
 
     List<URL> containerConfigUrl() {
-        return containerConfigUrl
+        return containerConfigUrl ?: Collections.<URL>emptyList()
     }
 
     Duration tokensCacheMaxDuration() { 
         return tokensCacheMaxDuration 
     }
-    
+
+    String containerPlatform() {
+        return containerPlatform
+    }
 }

@@ -822,6 +822,10 @@ class Session implements ISession {
         }
     }
 
+    boolean enableModuleBinaries() {
+        config.navigate('nextflow.enable.moduleBinaries', false) as boolean
+    }
+
     @PackageScope VersionNumber getCurrentVersion() {
         new VersionNumber(APP_VER)
     }
@@ -1051,11 +1055,11 @@ class Session implements ISession {
         observers.each { trace -> trace.onFlowCreate(this) }
     }
 
-    void notifyFilePublish(Path destination) {
+    void notifyFilePublish(Path destination, Path source) {
         def copy = new ArrayList<TraceObserver>(observers)
         for( TraceObserver observer : copy  ) {
             try {
-                observer.onFilePublish(destination)
+                observer.onFilePublish(destination, source)
             }
             catch( Exception e ) {
                 log.error "Failed to invoke observer on file publish: $observer", e
@@ -1159,9 +1163,11 @@ class Session implements ISession {
         def engines = new LinkedList<Map>()
         getContainerConfig0('docker', engines)
         getContainerConfig0('podman', engines)
+        getContainerConfig0('sarus', engines)
         getContainerConfig0('shifter', engines)
         getContainerConfig0('udocker', engines)
         getContainerConfig0('singularity', engines)
+        getContainerConfig0('apptainer', engines)
         getContainerConfig0('charliecloud', engines)
 
         def enabled = engines.findAll { it.enabled?.toString() == 'true' }

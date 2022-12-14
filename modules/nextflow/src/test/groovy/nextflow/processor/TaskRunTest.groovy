@@ -332,6 +332,7 @@ class TaskRunTest extends Specification {
         'docker'    | 'busybox'                 | [enabled: true, x:'alpha', y: 'beta']
         'docker'    | 'd.reg/busybox'           | [enabled: true, x:'alpha', y: 'beta', registry: 'd.reg']
         'udocker'   | 'busybox:latest'          | [enabled: true, x:'alpha', y: 'beta']
+        'sarus'     | 'busybox'                 | [enabled: true, x:'delta', y: 'gamma']
         'shifter'   | 'docker:busybox:latest'   | [enabled: true, x:'delta', y: 'gamma']
     }
 
@@ -498,7 +499,7 @@ class TaskRunTest extends Specification {
         then:
         task.script == '$BASH_VAR >interpolated value<'
         task.source == '$BASH_VAR #{nxf_var}'
-
+        task.traceScript == '$BASH_VAR >interpolated value<'
     }
 
     def 'should resolve a task template file' () {
@@ -523,7 +524,7 @@ class TaskRunTest extends Specification {
         task.script == 'echo Ciao mondo'
         task.source == 'echo ${say_hello}'
         task.template == file
-
+        task.traceScript == 'template($file)'
     }
 
     def 'should resolve a shell template file, ignore BASH variables and parse !{xxx} ones' () {
@@ -548,7 +549,7 @@ class TaskRunTest extends Specification {
         task.script == 'echo $HOME ~ Foo bar'
         task.source == 'echo $HOME ~ !{user_name}'
         task.template == file
-
+        task.traceScript == 'template($file)'
     }
 
     def 'should resolve a shell template file, ignore BASH variables and parse #{xxx} ones' () {
@@ -574,7 +575,7 @@ class TaskRunTest extends Specification {
         task.script == 'echo $HOME ~ Foo bar'
         task.source == 'echo $HOME ~ #{user_name}'
         task.template == file
-
+        task.traceScript == 'template($file)'
     }
 
     def 'should check container native flag' () {
